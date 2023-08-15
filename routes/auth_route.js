@@ -60,8 +60,20 @@ authRoute.post("/register", async (req, res) => {
         await db.query(
             `INSERT user ( username , password , name , phone ) VALUES ( '${username}' , '${hashedPassword}' , '${name}' , '${phone}')`
         );
-
-        res.send("done");
+        const role = await db.query(
+            `SELECT role FROM user WHERE username='${username}'`
+        );
+        const accesToken = jwt.sign(
+            { username, role },
+            process.env.ACCESS_TOKEN_SECRET,
+            { expiresIn: process.env.ACCESS_TOKEN_EXPIRES }
+        );
+        const refreshToken = jwt.sign(
+            { username, role },
+            process.env.REFRESH_TOKEN_SECRET,
+            { expiresIn: process.env.REFRESH_TOKEN_EXPIRES }
+        );
+        res.send({ accesToken, refreshToken });
     } catch (e) {
         res.send(e.message);
     }
