@@ -53,25 +53,29 @@ authRoute.post("/register", async (req, res) => {
             throw new Error("phone already exists");
         }
 
-        const hashedPassword = await bcrypt.hashSync(
-            password,
-            await bcrypt.genSaltSync(5)
-        );
-        await db.query(
-            `INSERT user ( username , password , name , phone ) VALUES ( '${username}' , '${hashedPassword}' , '${name}' , '${phone}')`
-        );
-        const role = await db.query(
-            `SELECT role FROM user WHERE username='${username}'`
-        );
         const accesToken = jwt.sign(
-            { username, role },
+            { username, role: "user" },
             process.env.ACCESS_TOKEN_SECRET,
             { expiresIn: process.env.ACCESS_TOKEN_EXPIRES }
         );
         const refreshToken = jwt.sign(
-            { username, role },
+            { username, role: "user" },
             process.env.REFRESH_TOKEN_SECRET,
             { expiresIn: process.env.REFRESH_TOKEN_EXPIRES }
+        );
+
+        const hashedPassword = await bcrypt.hashSync(
+            password,
+            await bcrypt.genSaltSync(5)
+        );
+
+        const hashedRefreshToken = await bcrypt.hashSync(
+            refreshToken,
+            await bcrypt.genSaltSync(5)
+        );
+
+        await db.query(
+            `INSERT user ( username , hashedPassword , name , phone ,hashedRefreshToken) VALUES ( '${username}' , '${hashedPassword}' , '${name}' , '${phone}' , '${hashedRefreshToken}')`
         );
         res.send({ accesToken, refreshToken });
     } catch (e) {
