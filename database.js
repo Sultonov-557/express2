@@ -4,11 +4,11 @@ let con;
 
 module.exports["connect"] = async () => {
     con = await mysql.createConnection({
-        host: "localhost",
-        user: "root",
-        port: 3306,
-        password: "root",
-        database: "database",
+        host: process.env.DATABASE_URL,
+        user: process.env.DATABASE_USER,
+        port: process.env.DATABASE_PORT,
+        password: process.env.DATABASE_PASSWORD,
+        database: process.env.DATABASE_NAME,
     });
 };
 
