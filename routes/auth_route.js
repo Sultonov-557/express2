@@ -1,6 +1,8 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const authRoute = express.Router();
+const db = require("../database");
+const bcrypt = require("bcrypt");
 
 authRoute.post("/sign-in", (req, res) => {
     try {
@@ -27,6 +29,39 @@ authRoute.post("/sign-in", (req, res) => {
             { expiresIn: process.env.REFRESH_TOKEN_EXPIRES }
         );
         res.send({ accesToken, refreshToken });
+    } catch (e) {
+        res.send(e.message);
+    }
+});
+
+authRoute.post("/register", async (req, res) => {
+    try {
+        const { username, password, name, phone } = req.body;
+        if (!username || !password || !name || !phone) {
+            throw new Error("values not right");
+        }
+        const username_ = await db.query(
+            "SELECT username FROM user WHERE username='" + username + "'"
+        );
+        if (username_.length != 0) {
+            throw new Error("username already exists");
+        }
+        const phone_ = await db.query(
+            "SELECT phone FROM user WHERE phone='" + phone + "'"
+        );
+        if (phone_.length != 0) {
+            throw new Error("phone already exists");
+        }
+
+        const hashedPassword = await bcrypt.hashSync(
+            password,
+            await bcrypt.genSaltSync(5)
+        );
+        await db.query(
+            `INSERT user ( username , password , name , phone ) VALUES ( '${username}' , '${hashedPassword}' , '${name}' , '${phone}')`
+        );
+
+        res.send("done");
     } catch (e) {
         res.send(e.message);
     }
