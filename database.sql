@@ -11,7 +11,7 @@ DROP TABLE IF EXISTS `category`;
 DROP TABLE IF EXISTS `category_attribute`;
 
 CREATE TABLE `user` (
-  `ID` integer PRIMARY KEY auto,
+  `ID` integer PRIMARY KEY,
   `username` varchar(255),
   `name` varchar(255),
   `photo` varchar(255),

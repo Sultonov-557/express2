@@ -14,5 +14,5 @@ module.exports["connect"] = async () => {
 
 module.exports["query"] = async (query) => {
     const data = await con.query(query);
-    return data[0];
+    return data[0][0];
 };
