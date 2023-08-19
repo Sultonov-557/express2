@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const authRoute = express.Router();
 const db = require("../database");
 const bcrypt = require("bcrypt");
+const authGuard = require("../middleware/auth-guard");
 
 authRoute.post("/login", async (req, res) => {
     try {
@@ -11,10 +12,8 @@ authRoute.post("/login", async (req, res) => {
             throw new Error("values incorrect");
         }
 
-        const user = (
-            await db.query(`SELECT * FROM user WHERE phone='${phone}'`)
-        );
-        
+        const user = await db.query(`SELECT * FROM user WHERE phone='${phone}'`);
+
         if (user == undefined) {
             throw new Error("phone is incorrect");
         }
@@ -23,12 +22,12 @@ authRoute.post("/login", async (req, res) => {
             throw new Error("password is incorrect");
         }
         const accesToken = jwt.sign(
-            { username: user.username, role: user.role },
+            { ID: user.ID, role: user.role },
             process.env.ACCESS_TOKEN_SECRET,
             { expiresIn: process.env.ACCESS_TOKEN_EXPIRES }
         );
         const refreshToken = jwt.sign(
-            { username: user.username, role: user.role },
+            { ID: user.ID, role: user.role },
             process.env.REFRESH_TOKEN_SECRET,
             { expiresIn: process.env.REFRESH_TOKEN_EXPIRES }
         );
@@ -44,36 +43,19 @@ authRoute.post("/register", async (req, res) => {
         if (!username || !password || !name || !phone) {
             throw new Error("values not right");
         }
-        const username_ = await db.query(
-            `SELECT username FROM user WHERE username='${username}'`
-        );
+        const username_ = await db.query(`SELECT username FROM user WHERE username='${username}'`);
         if (username_.length != 0) {
             throw new Error("username already exists");
         }
-        const phone_ = await db.query(
-            `SELECT phone FROM user WHERE phone='${phone}'`
-        );
+        const phone_ = await db.query(`SELECT phone FROM user WHERE phone='${phone}'`);
         if (phone_.length != 0) {
             throw new Error("phone already exists");
         }
 
-        const accesToken = jwt.sign(
-            { username, role: "user" },
-            process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: process.env.ACCESS_TOKEN_EXPIRES }
-        );
-        const refreshToken = jwt.sign(
-            { username, role: "user" },
-            process.env.REFRESH_TOKEN_SECRET,
-            { expiresIn: process.env.REFRESH_TOKEN_EXPIRES }
-        );
-
         const hashedPassword = await bcrypt.hashSync(password, 5);
 
-        const hashedRefreshToken = await bcrypt.hashSync(refreshToken, 5);
-
         await db.query(
-            `INSERT user ( username , hashedPassword , name , phone ,hashedRefreshToken) VALUES ( '${username}' , '${hashedPassword}' , '${name}' , '${phone}' , '${hashedRefreshToken}')`
+            `INSERT user ( username , hashedPassword , name , phone) VALUES ( '${username}' , '${hashedPassword}' , '${name}' , '${phone}')`
         );
         res.send({ accesToken, refreshToken });
     } catch (e) {
@@ -81,22 +63,36 @@ authRoute.post("/register", async (req, res) => {
     }
 });
 
-authRoute.post("/refresh", (req, res) => {
+authRoute.post("/refresh", async (req, res) => {
     try {
-        const refreshToken = req.body.refreshToken;
+        const refreshToken_ = req.body.refreshToken;
 
-        if (!refreshToken) {
-            throw new Error("token not found");
+        if (!refreshToken_) {
+            throw new Error("BAD REQUEST"); //BAD request
         }
 
-        const { username, role } = jwt.verify(
-            refreshToken,
-            process.env.REFRESH_TOKEN_SECRET
+        const { ID, role } = jwt.verify(refreshToken_, process.env.REFRESH_TOKEN_SECRET);
+
+        const user = await db.query(`SELECT * FROM user WHERE ID=${ID}`);
+
+        if (user.hashedRefreshToken == undefined) {
+            throw new Error("access denied");
+        }
+
+        const refreshToken = jwt.sign(
+            {
+                ID,
+                role,
+            },
+            process.env.REFRESH_TOKEN_SECRET,
+            {
+                expiresIn: process.env.REFRESH_TOKEN_EXPIRES,
+            }
         );
 
         const accessToken = jwt.sign(
             {
-                username,
+                ID,
                 role,
             },
             process.env.ACCESS_TOKEN_SECRET,
@@ -104,10 +100,19 @@ authRoute.post("/refresh", (req, res) => {
                 expiresIn: process.env.ACCESS_TOKEN_EXPIRES,
             }
         );
-        res.send({ accessToken });
+        const hashedRefreshToken = await bcrypt.hashSync(refreshToken, 5);
+        await db.query(`UPDATE user SET hashedRefreshToken=${hashedRefreshToken} WHERE id=${ID}`);
+        res.send({ accessToken, refreshToken });
     } catch (e) {
-        const { message } = e;
-        res.send({ message });
+        res.send(e);
+    }
+});
+
+authRoute.post("/logout", authGuard, async (req, res) => {
+    try {
+        await db.query(`UPDATE user SET hashedRefreshToken=NULL WHERE id=${req.id}`);
+    } catch (e) {
+        res.send(e.message);
     }
 });
 
