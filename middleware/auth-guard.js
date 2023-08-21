@@ -13,9 +13,9 @@ module.exports = (req, res, next) => {
         if (!token) {
             throw new Error("token is undefined");
         }
-        const { id, role } = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        const { ID, role } = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
         req.role = role;
-        req.id = id;
+        req.id = ID;
         next();
     } catch (e) {
         res.send(e.message);
