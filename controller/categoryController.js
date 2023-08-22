@@ -1,4 +1,5 @@
 const db = require("../database");
+const Pagination = require("../util/pagintion.js");
 
 async function post(req, res) {
     try {
@@ -22,7 +23,8 @@ async function post(req, res) {
 
 async function findAll(req, res) {
     try {
-        const { page } = req.params;
+        const { page, paginationLimit } = req.params;
+        const categoryPagination = new Pagination();
     } catch (e) {}
 }
 
@@ -59,4 +61,4 @@ async function remove(req, res) {
     }
 }
 
-module.exports = { get, post, update, remove ,findAll};
+module.exports = { get, post, update, remove, findAll };

