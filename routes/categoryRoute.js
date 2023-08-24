@@ -7,7 +7,8 @@ const categoryController = require("../controller/categoryController");
 categoryRoute.post("/", authGuard, roleGuard("admin", "modernator"), categoryController.post);
 
 categoryRoute.get("/:id", categoryController.get);
-categoryRoute.get("/", categoryController.findAll);
+
+categoryRoute.get("/findAll/:page/:paginationLimit", categoryController.findAll);
 
 categoryRoute.put("/:id", authGuard, roleGuard("admin", "moderator"), categoryController.update);
 

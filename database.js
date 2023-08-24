@@ -21,3 +21,13 @@ module.exports["query"] = async (query, values) => {
 	}
 	return data[0][0];
 };
+
+module.exports["queryAll"] = async (query, values) => {
+	let data;
+	if (values == undefined) {
+		data = await con.query(query);
+	} else {
+		data = await con.query(query, values);
+	}
+	return data[0];
+};
