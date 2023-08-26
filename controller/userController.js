@@ -25,7 +25,6 @@ async function post(req, res) {
 
 async function update(req, res) {
     try {
-        const oldUser = await db.query(`SAF user WH ID=${id}`);
         let { name, username, photo, region, phone, otp, role } = req.body;
         const values = { name, username, phone, photo, region, otp, role };
 

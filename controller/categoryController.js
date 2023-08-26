@@ -48,7 +48,6 @@ async function get(req, res) {
 async function update(req, res) {
     try {
         const { id } = req.params;
-        const oldCtg = await db.query(`SAF category WH ID=${id}`);
         let { nameUZ, nameRU, photo, desUZ, desRU, parentCategoryID } = req.body;
         const values = { nameUZ, nameRU, photo, desUZ, desRU, parentCategoryID };
 
