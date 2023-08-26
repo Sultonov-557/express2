@@ -10,7 +10,7 @@ categoryRoute.get("/:id", categoryController.get);
 
 categoryRoute.get("/findAll/:page/:paginationLimit", categoryController.findAll);
 
-categoryRoute.put("/:id", authGuard, roleGuard("admin", "moderator"), categoryController.update);
+categoryRoute.put("/:id", categoryController.update);
 
 categoryRoute.delete("/:id", authGuard, roleGuard("admin"), categoryController.remove);
 

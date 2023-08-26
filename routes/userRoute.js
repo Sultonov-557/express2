@@ -3,42 +3,14 @@ const express = require("express");
 const userRoute = express.Router();
 const authGuard = require("../middleware/auth-guard");
 const roleGuard = require("../middleware/role-guard");
+const userController = require("../controller/userController");
 
-userRoute.get("/:id", async (req, res) => {
-    try {
-        const id = req.params.id;
-        const data = await db.query(`SELECT * FROM user WHERE ID=${id}`);
-        res.send(data);
-    } catch (e) {
-        res.send(e.message);
-    }
-});
+userRoute.get("/:id", userController.get);
 
-userRoute.put(
-    "/",
-    authGuard,
-    roleGuard("admin", "moderator"),
-    async (req, res) => {
-        try {
-            const { id, column, value } = req.body;
-            await db.query(
-                `UPDATE user SET ${column} = '${value}' WHERE ID= ${id}`
-            );
-            res.send("done");
-        } catch (e) {
-            res.send(e.message);
-        }
-    }
-);
+userRoute.post("/", authGuard, roleGuard("admin"), userController.post);
 
-userRoute.delete("/", authGuard, roleGuard("admin"), async (req, res) => {
-    try {
-        const { id } = req.body;
-        await db.query(`DELETE FROM user WHERE ID='${id}';`);
-        res.send("done");
-    } catch (e) {
-        res.send(e.message);
-    }
-});
+userRoute.put("/:id", authGuard, roleGuard("admin", "moderator"), userController.update);
+
+userRoute.delete("/:id", authGuard, roleGuard("admin"), userController.remove);
 
 module.exports = userRoute;

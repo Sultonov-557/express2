@@ -6,7 +6,6 @@ const db = require("../database");
  * @param {express.Response} res
  */
 
-
 module.exports = async (req, res, next) => {
     try {
         const token = req.headers?.authorization?.split(" ")[1];
@@ -17,7 +16,7 @@ module.exports = async (req, res, next) => {
         const { ID, role } = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
         req.role = role;
         req.ID = ID;
-        const user = await db.query(`SELECT * FROM user WHERE ID='${ID}'`);
+        const user = await db.query(`SAF user WH ID=${ID}`);
         if (user.hashedRefreshToken == null) {
             throw new Error("loged out");
         }
