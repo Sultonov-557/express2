@@ -1,4 +1,5 @@
 const mysql = require("mysql2/promise");
+const dbutil=require("./util/dbparse")
 
 let con;
 
@@ -13,6 +14,7 @@ module.exports["connect"] = async () => {
 };
 
 module.exports["query"] = async (query, values) => {
+	query=dbutil.parse(query)
 	let data;
 	if (values == undefined) {
 		data = await con.query(query);
@@ -23,6 +25,7 @@ module.exports["query"] = async (query, values) => {
 };
 
 module.exports["queryAll"] = async (query, values) => {
+	query=dbutil.parse(query)
 	let data;
 	if (values == undefined) {
 		data = await con.query(query);
@@ -31,3 +34,5 @@ module.exports["queryAll"] = async (query, values) => {
 	}
 	return data[0];
 };
+
+
