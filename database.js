@@ -13,6 +13,9 @@ module.exports["connect"] = async () => {
     });
 };
 
+/**
+ * @returns {object}
+ */
 module.exports["query"] = async (query, values) => {
     query = dbutil.parse(query);
     let data;
@@ -24,6 +27,9 @@ module.exports["query"] = async (query, values) => {
     return data[0][0];
 };
 
+/**
+ * @returns {Array}
+ */
 module.exports["queryAll"] = async (query, values) => {
     query = dbutil.parse(query);
     let data;

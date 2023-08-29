@@ -9,8 +9,8 @@ module.exports["parse"] = (txt) => {
     out = out.replace(/DAF /g, "DELETE * FROM ");
     out = out.replace(/FR /g, "FROM ");
     out = out.replace(/UP /g, "UPDATE ");
+    out = out.replace(/ININ /g, "INSERT INTO ");
     out = out.replace(/IN /g, "INSERT ");
-    out = out.replace(/ININ /g, "INSERT INTO");
     out = out.replace(/DEL /g, "DELETE ");
     out = out.replace(/WH /g, "WHERE ");
     out = out.replace(/LIM /g, "LIMIT ");
@@ -95,10 +95,3 @@ module.exports["updateAll"] = (tableName) => {
 module.exports["update"] = (tableName, condition) => {
     return this.parse(`DAF ${tableName} WH ${condition}`);
 };
-
-console.log(stringify({ hello: "hello", yellow: "yello" }));
-
-function stringify(obj) {
-    let out;
-    return out;
-}

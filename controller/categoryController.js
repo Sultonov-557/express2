@@ -14,6 +14,12 @@ async function post(req, res) {
             }
         }
 
+        for (i in params) {
+            if (params[i] === undefined) {
+                delete params[i];
+            }
+        }
+
         const query = "ININ category SET ?";
         await db.query(query, params);
         res.send("done");
@@ -24,12 +30,15 @@ async function post(req, res) {
 
 async function findAll(req, res) {
     try {
-        const { page, paginationLimit } = req.params;
-        const categoryPagination = new Pagination(page, paginationLimit);
-        const out = await db.queryAll(
+        const { page, paginationLimit } = req.query;
+        console.log(page);
+        const items = await db.queryAll("SAF category");
+        const categoryPagination = new Pagination(items.length, paginationLimit, page);
+        console.log(categoryPagination);
+        const data = await db.queryAll(
             `SAF category LIM ${categoryPagination.limit} OFF ${categoryPagination.offset}`
         );
-        res.send(out);
+        res.send({ data, pagination: categoryPagination });
     } catch (e) {
         res.send(e.message);
     }

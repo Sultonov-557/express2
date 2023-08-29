@@ -1,4 +1,5 @@
 const db = require("../database");
+const bcrypt = require("bcrypt");
 
 async function get(req, res) {
     try {
@@ -10,10 +11,29 @@ async function get(req, res) {
     }
 }
 
+async function findAll(req, res) {
+    const page = req.query.page;
+    const paginationLimit = req.query.paginationLimit;
+    const userPagination = new Pagination(page, paginationLimit);
+    const out = await db.queryAll(
+        `SAF user LIM ${userPagination.limit} OFF ${userPagination.offset}`
+    );
+    res.send(out);
+}
+
 async function post(req, res) {
     try {
-        const { name, username, photo, phone, region, otp, role } = req.body;
-        const params = { name, username, photo, phone, region, otp, role };
+        const { name, username, hashedPassword, photo, phone, region, otp, role } = req.body;
+
+        hashedPassword = bcrypt.hashSync(hashedPassword, 5);
+
+        const params = { name, username, hashedPassword, photo, phone, region, otp, role };
+
+        const user = await db.query(`SAF user WH phone='${phone}'`);
+
+        if (user) {
+            throw new Error("user already exits");
+        }
 
         const query = "ININ user SET ?";
         await db.query(query, params);

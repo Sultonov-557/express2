@@ -8,7 +8,7 @@ categoryRoute.post("/", authGuard, roleGuard("admin", "modernator"), categoryCon
 
 categoryRoute.get("/:id", categoryController.get);
 
-categoryRoute.get("/findAll/:page/:paginationLimit", categoryController.findAll);
+categoryRoute.get("/findAll", categoryController.findAll);
 
 categoryRoute.put("/:id", categoryController.update);
 
