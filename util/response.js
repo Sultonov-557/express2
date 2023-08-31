@@ -13,7 +13,7 @@ class Response {
         /**@type {Pagination} */
         this.pagination = pagination || null;
 
-        /**@type {Error} */
+        /**@type {string} */
         this.error = error || null;
 
         /**@type {number} */

@@ -29,7 +29,7 @@ async function post(req, res) {
     }
 }
 
-async function findAll(req, res) {
+async function findAll(req, res, next) {
     try {
         const { page, paginationLimit } = req.query;
         const items = await db.queryAll("SAF category");
@@ -39,7 +39,7 @@ async function findAll(req, res) {
         );
         res.send(new Response(data, categoryPagination, null));
     } catch (e) {
-        res.send(e.message);
+        next(e);
     }
 }
 

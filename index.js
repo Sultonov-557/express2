@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const Response = require("./util/response");
 
 app.use(express.json());
 require("dotenv").config();
@@ -25,4 +26,9 @@ app.use("/user", userRoute);
 
 app.get("/", authMiddleware, roleMiddleware("user"), (req, res) => {
     res.send("hello");
+});
+
+app.use((err, req, res, next) => {
+    console.log("error");
+    res.send(new Response(null, null, err.message));
 });
