@@ -7,6 +7,8 @@ const userController = require("../controller/userController");
 
 userRoute.get("/:id", userController.get);
 
+userRoute.get("/findall", userController.findAll);
+
 userRoute.post("/", authGuard, roleGuard("admin"), userController.post);
 
 userRoute.put("/:id", authGuard, roleGuard("admin", "moderator"), userController.update);

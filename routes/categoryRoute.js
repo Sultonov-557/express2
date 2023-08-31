@@ -6,9 +6,9 @@ const categoryController = require("../controller/categoryController");
 
 categoryRoute.post("/", authGuard, roleGuard("admin", "modernator"), categoryController.post);
 
-categoryRoute.get("/:id", categoryController.get);
-
 categoryRoute.get("/findAll", categoryController.findAll);
+
+categoryRoute.get("/:id", categoryController.get);
 
 categoryRoute.put("/:id", categoryController.update);
 

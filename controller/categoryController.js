@@ -1,5 +1,6 @@
 const db = require("../database");
 const Pagination = require("../util/pagintion.js");
+const Response = require("../util/response");
 const dbutil = require("../util/dbparse");
 
 async function post(req, res) {
@@ -31,14 +32,12 @@ async function post(req, res) {
 async function findAll(req, res) {
     try {
         const { page, paginationLimit } = req.query;
-        console.log(page);
         const items = await db.queryAll("SAF category");
         const categoryPagination = new Pagination(items.length, paginationLimit, page);
-        console.log(categoryPagination);
         const data = await db.queryAll(
             `SAF category LIM ${categoryPagination.limit} OFF ${categoryPagination.offset}`
         );
-        res.send({ data, pagination: categoryPagination });
+        res.send(new Response(data, categoryPagination, null));
     } catch (e) {
         res.send(e.message);
     }

@@ -76,15 +76,15 @@ module.exports["delete"] = (tableName, condition) => {
  * @returns {string} query string
  */
 module.exports["updateByID"] = (tableName, ID, values) => {
-    return this.parse(`UP ${tableName} SET ? WH ID='${ID}'`);
+    return this.parse(`UP ${tableName} SET ${stringify(values)} WH ID='${ID}'`);
 };
 
 /**
  * @param {string} tableName name of table
  * @returns {string} query string
  */
-module.exports["updateAll"] = (tableName) => {
-    return this.parse(`DAF ${tableName}`);
+module.exports["updateAll"] = (tableName, value) => {
+    return this.parse(`UP ${tableName} SET ${stringify(value)}`);
 };
 
 /**
@@ -92,6 +92,17 @@ module.exports["updateAll"] = (tableName) => {
  * @param {string} condition condition for search
  * @returns {string} query string
  */
-module.exports["update"] = (tableName, condition) => {
-    return this.parse(`DAF ${tableName} WH ${condition}`);
+module.exports["update"] = (tableName, value, condition) => {
+    return this.parse(`UP ${tableName} SET ${stringify(value)} WH ${condition}`);
 };
+
+this.update()
+
+function stringify(obj) {
+    let out = "";
+    for (i in obj) {
+        out += `${i} = ${obj[i]},`;
+    }
+    out = out.slice(0, -1);
+    return out;
+}

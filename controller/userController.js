@@ -12,13 +12,19 @@ async function get(req, res) {
 }
 
 async function findAll(req, res) {
-    const page = req.query.page;
-    const paginationLimit = req.query.paginationLimit;
-    const userPagination = new Pagination(page, paginationLimit);
-    const out = await db.queryAll(
-        `SAF user LIM ${userPagination.limit} OFF ${userPagination.offset}`
-    );
-    res.send(out);
+    try {
+        const { page, paginationLimit } = req.query;
+        console.log(page);
+        const items = await db.queryAll("SAF category");
+        const categoryPagination = new Pagination(items.length, paginationLimit, page);
+        console.log(categoryPagination);
+        const data = await db.queryAll(
+            `SAF category LIM ${categoryPagination.limit} OFF ${categoryPagination.offset}`
+        );
+        res.send({ data, pagination: categoryPagination });
+    } catch (e) {
+        res.send(e.message);
+    }
 }
 
 async function post(req, res) {
@@ -75,4 +81,4 @@ async function remove(req, res) {
     }
 }
 
-module.exports = { get, update, remove, post };
+module.exports = { get, update, remove, post, findAll };
