@@ -3,7 +3,7 @@ const Pagination = require("../util/pagintion.js");
 const Response = require("../util/response");
 const dbutil = require("../util/dbparse");
 
-async function post(req, res) {
+async function post(req, res, next) {
     try {
         const { nameUZ, nameRU, desUZ, desRU, photo, parentCategoryID } = req.body;
         const params = { nameUZ, nameRU, desUZ, desRU, photo, parentCategoryID };
@@ -25,7 +25,7 @@ async function post(req, res) {
         await db.query(query, params);
         res.send("done");
     } catch (e) {
-        res.send(e.message);
+        next(e.message);
     }
 }
 
@@ -39,21 +39,21 @@ async function findAll(req, res, next) {
         );
         res.send(new Response(data, categoryPagination, null));
     } catch (e) {
-        next(e);
+        next(e.message);
     }
 }
 
-async function get(req, res) {
+async function get(req, res, next) {
     try {
         const id = req.params.id;
         const data = await db.query(`SAF category WH ID='${id}'`);
         res.send(data);
     } catch (e) {
-        res.send(e.message);
+        next(e.message);
     }
 }
 
-async function update(req, res) {
+async function update(req, res, next) {
     try {
         const { id } = req.params;
         let { nameUZ, nameRU, photo, desUZ, desRU, parentCategoryID } = req.body;
@@ -74,16 +74,16 @@ async function update(req, res) {
         await db.query(query, values);
         res.send("done");
     } catch (e) {
-        res.send(e.message);
+        next(e.message);
     }
 }
 
-async function remove(req, res) {
+async function remove(req, res, next) {
     try {
         const a = await db.query(`DAF category WH ID='${req.params.id}';`);
         res.send("done");
     } catch (e) {
-        res.send(e.message);
+        e.message;
     }
 }
 
