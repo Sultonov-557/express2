@@ -1,4 +1,5 @@
 const db = require("../database");
+const Response = require("../util/response");
 
 async function get(req, res, next) {
     try {
@@ -18,7 +19,7 @@ async function findAll(req, res, next) {
         const data = await db.queryAll(
             `SAF adress LIM ${categoryPagination.limit} OFF ${pagination.offset}`
         );
-        res.send({ data, pagination });
+        res.send(new Response(data, pagination));
     } catch (e) {
         next(e.message);
     }
@@ -26,14 +27,14 @@ async function findAll(req, res, next) {
 
 async function post(req, res, next) {
     try {
-        const { name, username, hashedPassword, photo, phone, region, otp, role } = req.body;
+        const { userID, region, referencePoint, street, house, room } = req.body;
 
-        const params = { name, username, hashedPassword, photo, phone, region, otp, role };
+        const params = { userID, region, referencePoint, street, house, room };
 
-        const user = await db.query(`SAF adress WH phone='${phone}'`);
+        const user = await db.query(`SAF user WH ID='${userID}'`);
 
-        if (user) {
-            throw new Error("user already exits");
+        if (user == undefined) {
+            throw new Error("user not found");
         }
 
         const query = "ININ adress SET ?";
@@ -46,13 +47,19 @@ async function post(req, res, next) {
 
 async function update(req, res, next) {
     try {
-        let { name, username, photo, region, phone, otp, role } = req.body;
-        const values = { name, username, phone, photo, region, otp, role };
+        let { userID, region, referencePoint, street, house, room } = req.body;
+        const values = { userID, region, referencePoint, street, house, room };
 
         for (i in values) {
             if (values[i] === undefined) {
                 delete values[i];
             }
+        }
+
+        const user = await db.query(`SAF user WH ID='${userID}'`);
+
+        if (user == undefined) {
+            throw new Error("user not found");
         }
 
         if (JSON.stringify(values) == "{}") {
