@@ -3,11 +3,11 @@ const express = require("express");
 const adressRoute = express.Router();
 const authGuard = require("../middleware/auth-guard");
 const roleGuard = require("../middleware/role-guard");
-const adressController = require("../controller/adressController");
-
-adressRoute.get("/:id", adressController.get);
+const adressController = require("../controller/addressController");
 
 adressRoute.get("/findall", adressController.findAll);
+
+adressRoute.get("/:id", adressController.get);
 
 adressRoute.post("/", authGuard, roleGuard("admin"), adressController.post);
 

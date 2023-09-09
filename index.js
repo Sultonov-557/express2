@@ -16,6 +16,8 @@ app.listen(port, () => {
 const authRoute = require("./routes/authRoute.js");
 const categoryRoute = require("./routes/categoryRoute.js");
 const userRoute = require("./routes/userRoute.js");
+const addressRoute = require("./routes/addressRoute.js");
+const productRoute = require("./routes/productRoute.js");
 
 const authMiddleware = require("./middleware/auth-guard.js");
 const roleMiddleware = require("./middleware/role-guard.js");
@@ -23,12 +25,15 @@ const roleMiddleware = require("./middleware/role-guard.js");
 app.use("/auth", authRoute);
 app.use("/category", categoryRoute);
 app.use("/user", userRoute);
+app.use("/address", addressRoute);
+app.use("/product", productRoute);
 
 app.get("/", authMiddleware, roleMiddleware("user"), (req, res) => {
     res.send("hello");
 });
 
 app.use((err, req, res, next) => {
-    console.log("error");
-    res.send(new Response(null, null, err.message));
+    res.send(new Response(null, null, err));
 });
+
+require("./test");

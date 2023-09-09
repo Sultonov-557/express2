@@ -10,7 +10,6 @@ module.exports["parse"] = (txt) => {
     out = out.replace(/FR /g, "FROM ");
     out = out.replace(/UP /g, "UPDATE ");
     out = out.replace(/ININ /g, "INSERT INTO ");
-    out = out.replace(/IN /g, "INSERT ");
     out = out.replace(/DEL /g, "DELETE ");
     out = out.replace(/WH /g, "WHERE ");
     out = out.replace(/LIM /g, "LIMIT ");
