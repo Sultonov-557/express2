@@ -4,7 +4,7 @@ const Response = require("../util/response");
 async function get(req, res, next) {
     try {
         const id = req.params.id;
-        const data = await db.query(`SAF attributevalue WHID=${id} `);
+        const data = await db.query(`SAF attributevalue WH ID=${id} `);
         
         res.send(data);
     } catch (e) {

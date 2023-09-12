@@ -4,7 +4,8 @@ const Response = require("../util/response");
 async function get(req, res, next) {
     try {
         const id = req.params.id;
-        const data = await db.query(`SAF categoryAttribute WHID=${id} `);
+        const {attributeID} = await db.query(`SAF categoryAttribute WH ID=${id} `);
+        const data=await db.queryAll(`SAF attribute WH ID='${attributeID}'`)
         
         res.send(data);
     } catch (e) {
@@ -17,7 +18,7 @@ async function findAll(req, res, next) {
         const { page, paginationLimit } = req.query;
         const items = await db.queryAll("SAF categoryAttribute");
         const pagination = new Pagination(items.length, paginationLimit, page);
-        const data = await db.queryAll(`SAF categoryAttribute LIM ${categoryPagination.limit} OFF ${pagination.offset}`);
+        const data = await db.queryAll(`SAF categoryAttribute LIM ${pagination.limit} OFF ${pagination.offset}`);
         res.send(new Response(data, pagination));
     } catch (e) {
         next(e.message);
