@@ -3,7 +3,7 @@ const app      = express();
 const Response = require("./util/response");
 const multer   = require("multer");
 
-app.use(express.json());
+app.use(express  .json());
 require("dotenv").config();
 
 const db = require("./database.js");
