@@ -1,8 +1,8 @@
-const express = require("express");
-const jwt = require("jsonwebtoken");
+const db        = require("../database");
+const jwt       = require("jsonwebtoken");
+const bcrypt    = require("bcrypt");
+const express   = require("express");
 const authRoute = express.Router();
-const db = require("../database");
-const bcrypt = require("bcrypt");
 const authGuard = require("../middleware/auth-guard");
 
 authRoute.post("/login", async (req, res) => {
@@ -35,7 +35,7 @@ authRoute.post("/login", async (req, res) => {
 authRoute.post("/register", async (req, res) => {
 	try {
 		const { username, password, name, phone } = req.body;
-		if (!username || !password || !name || !phone) {
+		if(!username || !password || !name || !phone) {
 			throw new Error("values not right");
 		}
 		const username_ = await db.query(`SELECT username FROM user WHERE username='${username}'`);

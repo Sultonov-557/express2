@@ -26,8 +26,7 @@ async function findAll(req, res, next) {
 
 async function post(req, res, next) {
     try {
-        const { name } = req.body;
-
+        const          { name } = req.body;
         const params = { name };
 
         const query = "ININ attribute SET ?";
@@ -40,8 +39,8 @@ async function post(req, res, next) {
 
 async function update(req, res, next) {
     try {
-        let { name } = req.body;
-        const values = { name};
+        let            { name } = req.body;
+        const values = { name };
 
         for (i in values) {
             if (values[i] === undefined) {

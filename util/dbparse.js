@@ -4,16 +4,16 @@
  */
 module.exports["parse"] = (txt) => {
     let out = txt;
-    out = out.replace(/SEL /g, "SELECT ");
-    out = out.replace(/SAF /g, "SELECT * FROM ");
-    out = out.replace(/DAF /g, "DELETE * FROM ");
-    out = out.replace(/FR /g, "FROM ");
-    out = out.replace(/UP /g, "UPDATE ");
+    out = out.replace(/FR /g,   "FROM ");
+    out = out.replace(/WH /g,   "WHERE ");
+    out = out.replace(/UP /g,   "UPDATE ");
+    out = out.replace(/LIM /g,  "LIMIT ");
+    out = out.replace(/OFF /g,  "OFFSET ");
+    out = out.replace(/DEL /g,  "DELETE ");
+    out = out.replace(/SEL /g,  "SELECT ");
+    out = out.replace(/SAF /g,  "SELECT * FROM ");
+    out = out.replace(/DAF /g,  "DELETE * FROM ");
     out = out.replace(/ININ /g, "INSERT INTO ");
-    out = out.replace(/DEL /g, "DELETE ");
-    out = out.replace(/WH /g, "WHERE ");
-    out = out.replace(/LIM /g, "LIMIT ");
-    out = out.replace(/OFF /g, "OFFSET ");
     return out;
 };
 

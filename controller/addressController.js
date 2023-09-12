@@ -26,8 +26,7 @@ async function findAll(req, res, next) {
 
 async function post(req, res, next) {
     try {
-        const { userID, region, referencePoint, street, house, room } = req.body;
-
+        const          { userID, region, referencePoint, street, house, room } = req.body;
         const params = { userID, region, referencePoint, street, house, room };
 
         const user = await db.query(`SAF user WH ID='${userID}'`);
@@ -46,7 +45,7 @@ async function post(req, res, next) {
 
 async function update(req, res, next) {
     try {
-        let { userID, region, referencePoint, street, house, room } = req.body;
+        let            { userID, region, referencePoint, street, house, room } = req.body;
         const values = { userID, region, referencePoint, street, house, room };
 
         for (i in values) {

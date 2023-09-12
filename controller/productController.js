@@ -26,8 +26,8 @@ async function findAll(req, res, next) {
 
 async function post(req, res, next) {
     try {
-        const { categoryID, images, name, desShort, des, price, cound, view, cartCound, favoriteCound, orderCound, discound } = req.body;
-        const params = { category, images, name, desShort, des, price, cound, view, cartCound, favoriteCound, orderCound, discound };
+        const          { categoryID, images, name, desShort, des, price, cound, view, cartCound, favoriteCound, orderCound, discound } = req.body;
+        const params = { categoryID, images, name, desShort, des, price, cound, view, cartCound, favoriteCound, orderCound, discound };
 
         const category = await db.query("SAF category WH ID=?", [categoryID]);
 
@@ -45,7 +45,7 @@ async function post(req, res, next) {
 
 async function update(req, res, next) {
     try {
-        const { categoryID, images, name, desShort, des, price, cound, view, cartCound, favoriteCound, orderCound, discound } = req.body;
+        const          { categoryID, images, name, desShort, des, price, cound, view, cartCound, favoriteCound, orderCound, discound } = req.body;
         const params = { categoryID, images, name, desShort, des, price, cound, view, cartCound, favoriteCound, orderCound, discound };
 
         for (i in params) {

@@ -1,8 +1,8 @@
-const express = require("express");
+const express                    = require("express");
 const productAttributeValueRoute = express.Router();
-const authGuard = require("../middleware/auth-guard");
-const roleGuard = require("../middleware/role-guard");
-const controller = require("../controller/addressController");
+const authGuard                  = require("../middleware/auth-guard");
+const roleGuard                  = require("../middleware/role-guard");
+const controller                 = require("../controller/addressController");
 
 productAttributeValueRoute.get("/findall", controller.findAll);
 

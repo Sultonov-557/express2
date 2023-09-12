@@ -26,9 +26,8 @@ async function findAll(req, res, next) {
 
 async function post(req, res, next) {
     try {
-        const { name ,attributeID} = req.body;
-
-        const params = { name ,	attributeID};
+        const          { name , attributeID } = req.body;
+        const params = { name ,	attributeID };
 
         const attribute=await db.query(`SAF attribute WH ID='${attributeID}'`)
 
@@ -45,8 +44,8 @@ async function post(req, res, next) {
 async function update(req, res, next) {
     try {
         const id=req.params.id
-        let { name ,attributeID} = req.body;
-        const values = { name,attributeID};
+        let            { name, attributeID } = req.body;
+        const values = { name, attributeID };
 
         for (i in values) {
             if (values[i] === undefined) {

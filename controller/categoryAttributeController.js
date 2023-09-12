@@ -28,7 +28,6 @@ async function findAll(req, res, next) {
 async function post(req, res, next) {
     try {
         const { categoryID,attributeID } = req.body;
-
         const params = { categoryID,attributeID };
 
         const category=await db.query(`SAF category WH ID='${categoryID}'`)

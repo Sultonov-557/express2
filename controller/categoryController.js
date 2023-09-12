@@ -4,7 +4,7 @@ const Response = require("../util/response");
 
 async function post(req, res, next) {
     try {
-        const { nameUZ, nameRU, desUZ, desRU, photo, parentCategoryID } = req.body;
+        const          { nameUZ, nameRU, desUZ, desRU, photo, parentCategoryID } = req.body;
         const params = { nameUZ, nameRU, desUZ, desRU, photo, parentCategoryID };
 
         if (parentCategoryID) {
@@ -55,7 +55,7 @@ async function get(req, res, next) {
 async function update(req, res, next) {
     try {
         const { id } = req.params;
-        let { nameUZ, nameRU, photo, desUZ, desRU, parentCategoryID } = req.body;
+        let            { nameUZ, nameRU, photo, desUZ, desRU, parentCategoryID } = req.body;
         const values = { nameUZ, nameRU, photo, desUZ, desRU, parentCategoryID };
 
         for (i in values) {

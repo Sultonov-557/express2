@@ -29,11 +29,11 @@ async function findAll(req, res,next) {
 
 async function post(req, res,next) {
     try {
-        const { name, username, hashedPassword, photo, phone, region, otp, role } = req.body;
-
-        hashedPassword = bcrypt.hashSync(hashedPassword, 5);
-
+        const          { name, username, hashedPassword, photo, phone, region, otp, role } = req.body;
         const params = { name, username, hashedPassword, photo, phone, region, otp, role };
+
+        params.hashedPassword = bcrypt.hashSync(params.hashedPassword, 5);
+
 
         const user = await db.query(`SAF user WH phone='${phone}'`);
 
@@ -51,7 +51,7 @@ async function post(req, res,next) {
 
 async function update(req, res,next) {
     try {
-        let { name, username, photo, region, phone, otp, role } = req.body;
+        let            { name, username, photo, region, phone, otp, role } = req.body;
         const values = { name, username, phone, photo, region, otp, role };
 
         for (i in values) {

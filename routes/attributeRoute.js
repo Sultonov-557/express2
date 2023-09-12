@@ -1,17 +1,13 @@
-const express = require("express");
-const atterbuteRoute = express.Router();
-const authGuard = require("../middleware/auth-guard");
-const roleGuard = require("../middleware/role-guard");
-const atterbuteController = require("../controller/attributeController");
+const express             = require("express");
+const authGuard           = require("../middleware/auth-guard");
+const roleGuard           = require("../middleware/role-guard");
+const atterbuteRoute      = express.Router();
+const attributeController = require("../controller/attributeController");
 
-atterbuteRoute.get("/findall", atterbuteController.findAll);
-
-atterbuteRoute.get("/:id", atterbuteController.get);
-
-atterbuteRoute.post("/", authGuard, roleGuard("admin"), atterbuteController.post);
-
-atterbuteRoute.put("/:id", authGuard, roleGuard("admin", "moderator"), atterbuteController.update);
-
-atterbuteRoute.delete("/:id", authGuard, roleGuard("admin"), atterbuteController.remove);
+atterbuteRoute.get   ("/findall", attributeController.findAll);
+atterbuteRoute.get   ("/:id",     attributeController.get);
+atterbuteRoute.post  ("/",        authGuard, roleGuard("admin"),              attributeController.post);
+atterbuteRoute.delete("/:id",     authGuard, roleGuard("admin"),              attributeController.remove);
+atterbuteRoute.put   ("/:id",     authGuard, roleGuard("admin", "moderator"), attributeController.update);
 
 module.exports = atterbuteRoute;
