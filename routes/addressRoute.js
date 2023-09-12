@@ -1,4 +1,3 @@
-const db = require("../database");
 const express = require("express");
 const adressRoute = express.Router();
 const authGuard = require("../middleware/auth-guard");

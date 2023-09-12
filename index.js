@@ -19,7 +19,7 @@ const categoryRoute = require("./routes/categoryRoute.js");
 const userRoute = require("./routes/userRoute.js");
 const addressRoute = require("./routes/addressRoute.js");
 const productRoute = require("./routes/productRoute.js");
-const atterbuteRoute = require("./routes/atterbuteRoute.js");
+const atterbuteRoute = require("./routes/attributeRoute.js");
 
 const authMiddleware = require("./middleware/auth-guard.js");
 const roleMiddleware = require("./middleware/role-guard.js");

@@ -1,4 +1,4 @@
-const db = require("../database");
+
 const express = require("express");
 const productRoute = express.Router();
 const authGuard = require("../middleware/auth-guard");
