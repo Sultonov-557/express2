@@ -2,7 +2,7 @@ const express = require("express");
 const atterbuteValueRoute = express.Router();
 const authGuard = require("../middleware/auth-guard");
 const roleGuard = require("../middleware/role-guard");
-const attrebuteController = require("../controller/attrebuteValueController");
+const attrebuteController = require("../controller/attributeValueController");
 
 atterbuteValueRoute.get("/findall", attrebuteController.findAll);
 

@@ -47,7 +47,8 @@ async function get(req, res, next) {
     try {
         const id = req.params.id;
         const data = await db.query(`SAF category WH ID='${id}'`);
-        res.send(data);
+        console.log("..");
+        res.send(new Response(data,null,null));
     } catch (e) {
         next(e.message);
     }

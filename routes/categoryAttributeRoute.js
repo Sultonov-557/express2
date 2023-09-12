@@ -2,16 +2,16 @@ const express = require("express");
 const categoryAttributeRoute = express.Router();
 const authGuard = require("../middleware/auth-guard");
 const roleGuard = require("../middleware/role-guard");
-const categoryAttributeController = require("../controller/addressController");
+const controller = require("../controller/addressController");
 
-categoryAttributeRoute.get("/findall", adressController.findAll);
+categoryAttributeRoute.get("/findall", controller.findAll);
 
-categoryAttributeRoute.get("/:id", adressController.get);
+categoryAttributeRoute.get("/:id", controller.get);
 
-categoryAttributeRoute.post("/", authGuard, roleGuard("admin"), adressController.post);
+categoryAttributeRoute.post("/", authGuard, roleGuard("admin"), controller.post);
 
-categoryAttributeRoute.put("/:id", authGuard, roleGuard("admin", "moderator"), adressController.update);
+categoryAttributeRoute.put("/:id", authGuard, roleGuard("admin", "moderator"), controller.update);
 
-categoryAttributeRoute.delete("/:id", authGuard, roleGuard("admin"), adressController.remove);
+categoryAttributeRoute.delete("/:id", authGuard, roleGuard("admin"), controller.remove);
 
 module.exports = categoryAttributeRoute;
