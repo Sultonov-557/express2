@@ -20,6 +20,9 @@ const userRoute = require("./routes/userRoute.js");
 const addressRoute = require("./routes/addressRoute.js");
 const productRoute = require("./routes/productRoute.js");
 const atterbuteRoute = require("./routes/attributeRoute.js");
+const atterbuteValueRoute = require("./routes/attributeValueRoute");
+const categoryAttributeRoute = require("./routes/categoryAttributeRoute");
+const productAttributeValueRoute = require("./routes/productAttributeValueRoute");
 
 const authMiddleware = require("./middleware/auth-guard.js");
 const roleMiddleware = require("./middleware/role-guard.js");
@@ -30,10 +33,10 @@ app.use("/user", userRoute);
 app.use("/address", addressRoute);
 app.use("/product", productRoute);
 app.use("/atterbute", atterbuteRoute);
+app.use("/atterbuteValue", atterbuteValueRoute);
+app.use("/categoryAttribute", categoryAttributeRoute);
+app.use("/protuctAttribute", productAttributeValueRoute);
 
-app.get("/database.sql", (req, res) => {
-    res.sendFile(__dirname + "/database.sql");
-});
 
 app.use("/image", express.static("./image"));
 
