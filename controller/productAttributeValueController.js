@@ -30,6 +30,12 @@ async function post(req, res, next) {
 
         const params = { productID,attributeValueID };
 
+        const product=await db.query(`SAF product WH ID='${productID}'`)
+        const attributeValue=await db.query(`SAF attributevalue WH ID='${attributeValueID}'`)
+
+        if(!product)throw new Error("product not found")
+        if(!attributeValue)throw new Error("attribute value not found")
+
         const query = "ININ productAttributeValue SET ?";
         await db.query(query, params);
         res.send("done");

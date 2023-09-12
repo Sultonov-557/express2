@@ -30,6 +30,12 @@ async function post(req, res, next) {
 
         const params = { categoryID,attributeID };
 
+        const category=await db.query(`SAF category WH ID='${categoryID}'`)
+        const atterbute=await db.query(`SAF category WH ID='${attributeID}'`)
+
+        if(!category)throw new Error("category not found")
+        if(!atterbute)throw new Error("attribute not found")
+
         const query = "ININ categoryAttribute SET ?";
         await db.query(query, params);
         res.send("done");
@@ -48,6 +54,12 @@ async function update(req, res, next) {
                 delete values[i];
             }
         }
+
+        const category=await db.query(`SAF category WH ID='${categoryID}'`)
+        const atterbute=await db.query(`SAF attribute WH ID='${attributeID}'`)
+
+        if(!category)throw new Error("category not found")
+        if(!atterbute)throw new Error("attribute not found")
 
         if (JSON.stringify(values) == "{}") {
             throw new Error("values empty");

@@ -30,6 +30,12 @@ async function post(req, res, next) {
 
         const params = { categoryID,productID };
 
+        const category=await db.query(`SAF category WH ID='${categoryID}'`)
+        const product=await db.query(`SAF product WH ID='${productID}'`)
+
+        if(!category)throw new Error("category not found")
+        if(!product)throw new Error("product not found")
+
         const query = "ININ categoryProduct SET ?";
         await db.query(query, params);
         res.send("done");
@@ -48,6 +54,12 @@ async function update(req, res, next) {
                 delete values[i];
             }
         }
+
+        const category=await db.query(`SAF category WH ID='${categoryID}'`)
+        const product=await db.query(`SAF product WH ID='${productID}'`)
+
+        if(!category)throw new Error("category not found")
+        if(!product)throw new Error("product not found")
 
         if (JSON.stringify(values) == "{}") {
             throw new Error("values empty");
