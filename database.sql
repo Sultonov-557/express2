@@ -1,149 +1,166 @@
-DROP TABLE IF EXISTS `user`;
-DROP TABLE IF EXISTS `review`;
-DROP TABLE IF EXISTS `address`;
-DROP TABLE IF EXISTS `attribute`;
-DROP TABLE IF EXISTS `attribute_value`;
-DROP TABLE IF EXISTS `product`;
-DROP TABLE IF EXISTS `order`;
-DROP TABLE IF EXISTS `cart`;
-DROP TABLE IF EXISTS `favorite`;
-DROP TABLE IF EXISTS `category`;
-DROP TABLE IF EXISTS `category_attribute`;
-
 CREATE TABLE `user` (
-  `ID` integer PRIMARY KEY,
-  `username` varchar(255),
+  `ID` integer PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(255),
-  `photo` varchar(255),
-  `password` varchar(255),
-  `region` varchar(255),
-  `phone` varchar(255),
+  `phone` varchar(255) UNIQUE,
   `otp` varchar(255),
-  `role` varchar(255),
-  `refresh_token` varchar(255),
-  `created_at` timestamp DEFAULT now(),
-  `updated_at` timestamp DEFAULT now()
-);
-
-CREATE TABLE `review` (
-  `ID` integer PRIMARY KEY,
-  `user_ID` integer,
-  `product_ID` integer,
-  `text` text,
-  `stars` integer,
-  `created_at` timestamp DEFAULT now(),
-  `updated_at` timestamp DEFAULT now()
-);
-
-CREATE TABLE `address` (
-  `ID` integer PRIMARY KEY,
-  `user_ID` integer,
+  `image` varchar(255) DEFAULT null,
   `region` varchar(255),
-  `reference_point` varchar(255),
-  `street` varchar(255),
-  `house` varchar(255),
-  `room` varchar(255),
-  `created_at` timestamp DEFAULT now(),
-  `updated_at` timestamp DEFAULT now()
-);
-
-CREATE TABLE `attribute` (
-  `ID` integer PRIMARY KEY,
-  `product_ID` integer,
-  `category_ID` integer,
-  `name` varchar(255)
-);
-
-CREATE TABLE `attribute_value` (
-  `ID` integer PRIMARY KEY,
-  `value` varchar(255),
-  `attribute_ID` varchar(255)
-);
-
-CREATE TABLE `product` (
-  `ID` integer PRIMARY KEY,
-  `category` integer,
-  `images` text,
-  `name` varchar(255),
-  `des_short` varchar(255),
-  `des` text,
-  `price` integer,
-  `count` integer,
-  `view` integer,
-  `cart_count` integer DEFAULT 0,
-  `favorite_count` integer DEFAULT 0,
-  `order_count` integer DEFAULT 0,
-  `discount` integer DEFAULT null,
-  `created_at` timestamp DEFAULT now(),
-  `updated_at` timestamp DEFAULT now()
-);
-
-CREATE TABLE `order` (
-  `ID` integer PRIMARY KEY,
-  `user_ID` integer,
-  `product_ID` integer,
-  `address_ID` integer,
-  `status` varchar(255),
-  `price` integer,
-  `delivery_time` varchar(255),
-  `created_at` timestamp DEFAULT now(),
-  `updated_at` timestamp DEFAULT now()
-);
-
-CREATE TABLE `cart` (
-  `user_ID` integer,
-  `product_ID` integer,
-  `created_at` timestamp DEFAULT now(),
-  `updated_at` timestamp DEFAULT now()
-);
-
-CREATE TABLE `favorite` (
-  `ID` integer PRIMARY KEY,
-  `user_ID` integer,
-  `product_ID` integer,
-  `created_at` timestamp DEFAULT now(),
-  `updated_at` timestamp DEFAULT now()
+  `hashedPassword` varchar(255),
+  `hashedRefreshToken` varchar(255),
+  `createdAt` timestamp DEFAULT now(),
+  `updatedAt` timestamp DEFAULT now()
 );
 
 CREATE TABLE `category` (
-  `ID` integer PRIMARY KEY,
-  `name_UZ` varchar(255),
-  `name_RU` varchar(255),
-  `photo` varchar(255),
-  `parent_category_ID` integer,
-  `created_at` timestamp DEFAULT now(),
-  `updated_at` timestamp DEFAULT now()
+  `ID` integer PRIMARY KEY AUTO_INCREMENT,
+  `nameUz` varchar(255),
+  `nameRu` varchar(255),
+  `parentCategoryID` integer,
+  `viewCount` integer,
+  `image` varchar(255),
+  `descUz` varchar(255) DEFAULT null,
+  `descRu` varchar(255) DEFAULT null,
+  `createdAt` timestamp DEFAULT now(),
+  `updatedAt` timestamp DEFAULT now()
 );
 
-ALTER TABLE `cart` ADD FOREIGN KEY (`user_ID`) REFERENCES `user` (`ID`);
+CREATE TABLE `product` (
+  `ID` integer PRIMARY KEY AUTO_INCREMENT,
+  `nameUz` varchar(255),
+  `nameRu` varchar(255),
+  `images` text,
+  `categoryID` integer,
+  `descShortUz` varchar(255),
+  `descShortRu` varchar(255),
+  `descRu` text,
+  `descUz` text,
+  `isPopular` boolean DEFAULT false,
+  `viewCount` integer DEFAULT 0,
+  `price` integer DEFAULT 0,
+  `cartCount` integer DEFAULT 0,
+  `favoriteCount` integer DEFAULT 0,
+  `orderCount` integer DEFAULT 0,
+  `discount` integer DEFAULT null,
+  `createdAt` timestamp DEFAULT now(),
+  `updatedAt` timestamp DEFAULT now()
+);
 
-ALTER TABLE `cart` ADD FOREIGN KEY (`product_ID`) REFERENCES `product` (`ID`);
+CREATE TABLE `basket` (
+  `ID` integer PRIMARY KEY AUTO_INCREMENT,
+  `productID` integer,
+  `userID` integer,
+  `count` integer,
+  `createdAt` timestamp DEFAULT now()
+);
 
-ALTER TABLE `favorite` ADD FOREIGN KEY (`user_ID`) REFERENCES `user` (`ID`);
+CREATE TABLE `favorite` (
+  `ID` integer PRIMARY KEY AUTO_INCREMENT,
+  `productID` integer,
+  `userID` integer,
+  `createdAt` timestamp DEFAULT now(),
+  `updatedAt` timestamp DEFAULT now()
+);
 
-ALTER TABLE `favorite` ADD FOREIGN KEY (`product_ID`) REFERENCES `product` (`ID`);
+CREATE TABLE `address` (
+  `ID` integer PRIMARY KEY AUTO_INCREMENT,
+  `userID` integer,
+  `region` varchar(255),
+  `referencePoint` varchar(255),
+  `street` varchar(255),
+  `house` varchar(255),
+  `room` varchar(255),
+  `createdAt` timestamp DEFAULT now(),
+  `updatedAt` timestamp DEFAULT now()
+);
 
-ALTER TABLE `category` ADD FOREIGN KEY (`parent_category_ID`) REFERENCES `category` (`ID`);
+CREATE TABLE `attribute` (
+  `ID` integer PRIMARY KEY AUTO_INCREMENT,
+  `name` varchar(255),
+  `createdAt` timestamp DEFAULT now()
+);
 
-ALTER TABLE `address` ADD FOREIGN KEY (`user_ID`) REFERENCES `user` (`ID`);
+CREATE TABLE `attributeValue` (
+  `ID` integer PRIMARY KEY AUTO_INCREMENT,
+  `attributeID` integer,
+  `name` varchar(255),
+  `createdAt` timestamp DEFAULT now()
+);
 
-ALTER TABLE `attribute` ADD FOREIGN KEY (`product_ID`) REFERENCES `product` (`ID`);
+CREATE TABLE `order` (
+  `ID` integer PRIMARY KEY AUTO_INCREMENT,
+  `productID` integer,
+  `userID` integer,
+  `addressID` integer,
+  `deliveryTime` varchar(255) DEFAULT "1day",
+  `orderStatus` varchar(255) DEFAULT "pending",
+  `deliveryPrice` integer DEFAULT 15000,
+  `createdAt` timestamp DEFAULT now(),
+  `updatedAt` timestamp DEFAULT now()
+);
+
+CREATE TABLE `review` (
+  `ID` integer PRIMARY KEY AUTO_INCREMENT,
+  `comment` text,
+  `userID` integer,
+  `stars` integer,
+  `productID` integer,
+  `createdAt` timestamp DEFAULT now(),
+  `updatedAt` timestamp DEFAULT now()
+);
+
+ALTER TABLE `category` ADD FOREIGN KEY (`parentCategoryID`) REFERENCES `category` (`ID`);
+
+CREATE TABLE `category_product` (
+  `category_ID` integer,
+  `product_ID` integer,
+  PRIMARY KEY (`category_ID`, `product_ID`)
+);
+
+ALTER TABLE `category_product` ADD FOREIGN KEY (`category_ID`) REFERENCES `category` (`ID`);
+
+ALTER TABLE `category_product` ADD FOREIGN KEY (`product_ID`) REFERENCES `product` (`ID`);
+
+
+ALTER TABLE `basket` ADD FOREIGN KEY (`productID`) REFERENCES `product` (`ID`);
+
+ALTER TABLE `basket` ADD FOREIGN KEY (`userID`) REFERENCES `user` (`ID`);
+
+ALTER TABLE `favorite` ADD FOREIGN KEY (`productID`) REFERENCES `product` (`ID`);
+
+ALTER TABLE `favorite` ADD FOREIGN KEY (`userID`) REFERENCES `user` (`ID`);
+
+ALTER TABLE `address` ADD FOREIGN KEY (`userID`) REFERENCES `user` (`ID`);
 
 CREATE TABLE `category_attribute` (
   `category_ID` integer,
-  `attribute_category_ID` integer,
-  PRIMARY KEY (`category_ID`, `attribute_category_ID`)
+  `attribute_ID` integer,
+  PRIMARY KEY (`category_ID`, `attribute_ID`)
 );
 
 ALTER TABLE `category_attribute` ADD FOREIGN KEY (`category_ID`) REFERENCES `category` (`ID`);
 
+ALTER TABLE `category_attribute` ADD FOREIGN KEY (`attribute_ID`) REFERENCES `attribute` (`ID`);
 
-ALTER TABLE `order` ADD FOREIGN KEY (`product_ID`) REFERENCES `product` (`ID`);
 
-ALTER TABLE `order` ADD FOREIGN KEY (`address_ID`) REFERENCES `address` (`ID`);
+CREATE TABLE `product_attributeValue` (
+  `product_ID` integer,
+  `attributeValue_ID` integer,
+  PRIMARY KEY (`product_ID`, `attributeValue_ID`)
+);
 
-ALTER TABLE `order` ADD FOREIGN KEY (`user_ID`) REFERENCES `user` (`ID`);
+ALTER TABLE `product_attributeValue` ADD FOREIGN KEY (`product_ID`) REFERENCES `product` (`ID`);
 
-ALTER TABLE `review` ADD FOREIGN KEY (`user_ID`) REFERENCES `user` (`ID`);
+ALTER TABLE `product_attributeValue` ADD FOREIGN KEY (`attributeValue_ID`) REFERENCES `attributeValue` (`ID`);
 
-ALTER TABLE `review` ADD FOREIGN KEY (`product_ID`) REFERENCES `product` (`ID`);
+
+ALTER TABLE `attributeValue` ADD FOREIGN KEY (`attributeID`) REFERENCES `attribute` (`ID`);
+
+ALTER TABLE `order` ADD FOREIGN KEY (`productID`) REFERENCES `product` (`ID`);
+
+ALTER TABLE `order` ADD FOREIGN KEY (`userID`) REFERENCES `user` (`ID`);
+
+ALTER TABLE `order` ADD FOREIGN KEY (`addressID`) REFERENCES `address` (`ID`);
+
+ALTER TABLE `review` ADD FOREIGN KEY (`userID`) REFERENCES `user` (`ID`);
+
+ALTER TABLE `review` ADD FOREIGN KEY (`productID`) REFERENCES `product` (`ID`);
