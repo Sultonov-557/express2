@@ -1,7 +1,6 @@
 const db = require("../database");
 const Pagination = require("../util/pagintion.js");
 const Response = require("../util/response");
-const dbutil = require("../util/dbparse");
 
 async function post(req, res, next) {
     try {
@@ -47,7 +46,6 @@ async function get(req, res, next) {
     try {
         const id = req.params.id;
         const data = await db.query(`SAF category WH ID='${id}'`);
-        console.log("..");
         res.send(new Response(data,null,null));
     } catch (e) {
         next(e.message);
