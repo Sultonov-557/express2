@@ -15,7 +15,7 @@ async function get(req, res, next) {
 async function search(req, res, next) {
     try {
         const query = req.params.query;
-        const data = await db.queryAll(`SAF product WHERE nameUz LIKE '${query}%' OR nameRu LIKE '${query}%'`);
+        const data = await db.queryAll(`SAF product WHERE nameUz LIKE '%${query || ''}%' OR nameRu LIKE '%${query || ''}%'`);
         res.send(data);
     } catch (e) {
         next(e.message);
