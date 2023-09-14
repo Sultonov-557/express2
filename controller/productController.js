@@ -27,7 +27,15 @@ async function findAll(req, res, next) {
         const { page, pageLimit, catID, attrValue } = req.query;
         let pagination;
         let data;
-        if (catID) {
+        if (catID && attrValue) {
+            const items = await db.queryAll(
+                `SELECT p.* FROM product p JOIN attributevalue av JOIN productattributevalue pav WHERE av.ID=pav.attributeValueID AND av.name='${attrValue}' AND p.categoryID=${catID}`
+            );
+            pagination = new Pagination(items.length, pageLimit, page);
+            data = await db.queryAll(
+                `SELECT p.* FROM product p JOIN attributevalue av JOIN productattributevalue pav WHERE av.ID=pav.attributeValueID AND av.name='${attrValue}' AND p.categoryID=${catID} LIM ${pagination.limit} OFF ${pagination.offset} `
+            );
+        } else if (catID) {
             const items = await db.queryAll(`SAF product WHERE categoryID=${catID}`);
             pagination = new Pagination(items.length, pageLimit, page);
             data = await db.queryAll(`SAF product WH categoryID=${catID} LIM ${pagination.limit} OFF ${pagination.offset}`);
