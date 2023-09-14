@@ -1,5 +1,5 @@
-const name="order"
-const values='productID,userID,addressID,deliveryTime,orderStatus, deliveryPrice'
+const name="review"
+const values='comment,userID,stars,productID,'
 
 const fs=require("fs")
 

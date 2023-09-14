@@ -1,9 +1,9 @@
-const express  = require("express");
-const app      = express();
+const express = require("express");
+const app = express();
 const Response = require("./util/response");
-const multer   = require("multer");
+const multer = require("multer");
 
-app.use(express  .json());
+app.use(express.json());
 require("dotenv").config();
 
 const db = require("./database.js");
@@ -14,28 +14,36 @@ app.listen(port, () => {
     console.log("server running on port " + port);
 });
 
-const authRoute                  = require("./routes/authRoute.js");
-const userRoute                  = require("./routes/userRoute.js");
-const addressRoute               = require("./routes/addressRoute.js");
-const productRoute               = require("./routes/productRoute.js");
-const categoryRoute              = require("./routes/categoryRoute.js");
-const atterbuteRoute             = require("./routes/attributeRoute.js");
-const atterbuteValueRoute        = require("./routes/attributeValueRoute");
-const categoryAttributeRoute     = require("./routes/categoryAttributeRoute");
+const authRoute = require("./routes/authRoute.js");
+const userRoute = require("./routes/userRoute.js");
+const orderRoute = require("./routes/orderRoute.js");
+const reviewRoute = require("./routes/reviewRoute.js");
+const basketRoute = require("./routes/basketRoute.js");
+const addressRoute = require("./routes/addressRoute.js");
+const productRoute = require("./routes/productRoute.js");
+const favoriteRoute = require("./routes/favoriteRoute.js");
+const categoryRoute = require("./routes/categoryRoute.js");
+const atterbuteRoute = require("./routes/attributeRoute.js");
+const atterbuteValueRoute = require("./routes/attributeValueRoute");
+const categoryAttributeRoute = require("./routes/categoryAttributeRoute");
 const productAttributeValueRoute = require("./routes/productAttributeValueRoute");
 
 const authMiddleware = require("./middleware/auth-guard.js");
 const roleMiddleware = require("./middleware/role-guard.js");
 
-app.use("/auth",              authRoute);
-app.use("/user",              userRoute);
-app.use("/address",           addressRoute);
-app.use("/product",           productRoute);
-app.use("/category",          categoryRoute);
-app.use("/atterbute",         atterbuteRoute);
-app.use("/atterbuteValue",    atterbuteValueRoute);
+app.use("/auth", authRoute);
+app.use("/user", userRoute);
+app.use("/order", orderRoute);
+app.use("/review", reviewRoute);
+app.use("/basket", basketRoute);
+app.use("/address", addressRoute);
+app.use("/product", productRoute);
+app.use("/favorite", favoriteRoute);
+app.use("/category", categoryRoute);
+app.use("/atterbute", atterbuteRoute);
+app.use("/atterbuteValue", atterbuteValueRoute);
 app.use("/categoryAttribute", categoryAttributeRoute);
-app.use("/protuctAttribute" , productAttributeValueRoute);
+app.use("/protuctAttribute", productAttributeValueRoute);
 
 app.use("/image", express.static("./image"));
 
@@ -44,19 +52,24 @@ const storage = multer.diskStorage({
         cb(null, "./image");
     },
     filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + Math.floor(Math.random() * 10000) + "";
+        const uniqueSuffix =
+            Date.now() + Math.floor(Math.random() * 10000) + "";
         const name = file.originalname.split(".");
         cb(null, uniqueSuffix + "." + name[name.length - 1]);
     },
 });
 
-app.post("/upload", multer({ storage: storage }).array("image", 10), (req, res) => {
-    const urls = [];
-    for (i in req.files) {
-        urls.push(req.files[i].path);
+app.post(
+    "/upload",
+    multer({ storage: storage }).array("image", 10),
+    (req, res) => {
+        const urls = [];
+        for (i in req.files) {
+            urls.push(req.files[i].path);
+        }
+        res.send(urls);
     }
-    res.send(urls);
-});
+);
 
 app.get("/", authMiddleware, roleMiddleware("user"), (req, res) => {
     res.send("hello");
