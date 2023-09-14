@@ -35,12 +35,8 @@ authRoute.post("/login", async (req, res) => {
 authRoute.post("/register", async (req, res) => {
 	try {
 		const { username, password, name, phone } = req.body;
-		if(!username || !password || !name || !phone) {
+		if(!password || !name || !phone) {
 			throw new Error("values not right");
-		}
-		const username_ = await db.query(`SELECT username FROM user WHERE username='${username}'`);
-		if (username_) {
-			throw new Error("username already exists");
 		}
 		const phone_ = await db.query(`SELECT phone FROM user WHERE phone='${phone}'`);
 		if (phone_) {
@@ -49,7 +45,7 @@ authRoute.post("/register", async (req, res) => {
 
 		const hashedPassword = await bcrypt.hashSync(password, 5);
 
-		await db.query(`INSERT user ( username , hashedPassword , name , phone) VALUES ( '${username}' , '${hashedPassword}' , '${name}' , '${phone}')`);
+		await db.query(`INSERT user ( hashedPassword , name , phone) VALUES ( '${hashedPassword}' , '${name}' , '${phone}')`);
 		res.send("done");
 	} catch (e) {
 		res.send(e.message);

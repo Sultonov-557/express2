@@ -1,4 +1,5 @@
 const db = require("../database");
+const Pagination = require("../util/pagintion");
 const bcrypt = require("bcrypt");
 
 async function get(req, res, next) {
@@ -11,14 +12,32 @@ async function get(req, res, next) {
     }
 }
 
-async function findAll(req, res, next) {
+async function search(req, res, next) {
     try {
-        const { page, paginationLimit } = req.query;
-        console.log(page);
-        const items = await db.queryAll("SAF product");
-        const pagination = new Pagination(items.length, paginationLimit, page);
-        const data = await db.queryAll(`SAF product LIM ${pagination.limit} OFF ${pagination.offset}`);
-        res.send({ data, pagination: pagination });
+        const query = req.params.query;
+        const data = await db.queryAll(`SAF product WHERE nameUz LIKE '${query}%' OR nameRu LIKE '${query}%'`);
+        res.send(data);
+    } catch (e) {
+        next(e.message);
+    }
+}
+
+async function findAll(req, res, next) {
+    console.log("...");
+    try {
+        const { page, pageLimit, catID } = req.query;
+        let pagination;
+        let data;
+        if (catID) {
+            const items = await db.queryAll(`SAF product WHERE categoryID=${catID}`);
+            pagination = new Pagination(items.length, pageLimit, page);
+            data = await db.queryAll(`SAF product WH categoryID=${catID} LIM ${pagination.limit} OFF ${pagination.offset}`);
+        } else {
+            const items = await db.queryAll("SAF product");
+            pagination = new Pagination(items.length, pageLimit, page);
+            data = await db.queryAll(`SAF product LIM ${pagination.limit} OFF ${pagination.offset}`);
+        }
+        res.send({ data, pagination });
     } catch (e) {
         next(e.message);
     }
@@ -26,7 +45,7 @@ async function findAll(req, res, next) {
 
 async function post(req, res, next) {
     try {
-        const          { categoryID, images, name, desShort, des, price, cound, view, cartCound, favoriteCound, orderCound, discound } = req.body;
+        const { categoryID, images, name, desShort, des, price, cound, view, cartCound, favoriteCound, orderCound, discound } = req.body;
         const params = { categoryID, images, name, desShort, des, price, cound, view, cartCound, favoriteCound, orderCound, discound };
 
         const category = await db.query("SAF category WH ID=?", [categoryID]);
@@ -45,7 +64,7 @@ async function post(req, res, next) {
 
 async function update(req, res, next) {
     try {
-        const          { categoryID, images, name, desShort, des, price, cound, view, cartCound, favoriteCound, orderCound, discound } = req.body;
+        const { categoryID, images, name, desShort, des, price, cound, view, cartCound, favoriteCound, orderCound, discound } = req.body;
         const params = { categoryID, images, name, desShort, des, price, cound, view, cartCound, favoriteCound, orderCound, discound };
 
         for (i in params) {
@@ -82,4 +101,4 @@ async function remove(req, res, next) {
     }
 }
 
-module.exports = { get, update, remove, post, findAll };
+module.exports = { get, update, remove, post, findAll, search };

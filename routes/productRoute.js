@@ -1,13 +1,14 @@
-
 const express = require("express");
 const productRoute = express.Router();
 const authGuard = require("../middleware/auth-guard");
 const roleGuard = require("../middleware/role-guard");
 const productController = require("../controller/productController");
 
-productRoute.get("/:id", productController.get);
-
 productRoute.get("/findall", productController.findAll);
+
+productRoute.get("/search/:query", productController.search);
+
+productRoute.get("/:id", productController.get);
 
 productRoute.post("/", authGuard, roleGuard("admin"), productController.post);
 

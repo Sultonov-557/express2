@@ -23,11 +23,7 @@ const addressRoute = require("./routes/addressRoute.js");
 const productRoute = require("./routes/productRoute.js");
 const favoriteRoute = require("./routes/favoriteRoute.js");
 const categoryRoute = require("./routes/categoryRoute.js");
-const atterbuteRoute = require("./routes/attributeRoute.js");
-const atterbuteValueRoute = require("./routes/attributeValueRoute");
-const categoryAttributeRoute = require("./routes/categoryAttributeRoute");
-const productAttributeValueRoute = require("./routes/productAttributeValueRoute");
-
+const attributeRoute = require("./routes/attributeRoute.js");
 const authMiddleware = require("./middleware/auth-guard.js");
 const roleMiddleware = require("./middleware/role-guard.js");
 
@@ -40,10 +36,7 @@ app.use("/address", addressRoute);
 app.use("/product", productRoute);
 app.use("/favorite", favoriteRoute);
 app.use("/category", categoryRoute);
-app.use("/atterbute", atterbuteRoute);
-app.use("/atterbuteValue", atterbuteValueRoute);
-app.use("/categoryAttribute", categoryAttributeRoute);
-app.use("/protuctAttribute", productAttributeValueRoute);
+app.use("/attribute", attributeRoute);
 
 app.use("/image", express.static("./image"));
 
