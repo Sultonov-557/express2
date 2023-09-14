@@ -23,15 +23,20 @@ async function search(req, res, next) {
 }
 
 async function findAll(req, res, next) {
-    console.log("...");
     try {
-        const { page, pageLimit, catID } = req.query;
+        const { page, pageLimit, catID, attrValue } = req.query;
         let pagination;
         let data;
         if (catID) {
             const items = await db.queryAll(`SAF product WHERE categoryID=${catID}`);
             pagination = new Pagination(items.length, pageLimit, page);
             data = await db.queryAll(`SAF product WH categoryID=${catID} LIM ${pagination.limit} OFF ${pagination.offset}`);
+        } else if (attrValue) {
+            const items = await db.queryAll(`SELECT p.* FROM product p JOIN attributevalue av JOIN productattributevalue pav WHERE av.ID=pav.attributeValueID AND av.name='${attrValue}'`);
+            pagination = new Pagination(items.length, pageLimit, page);
+            data = await db.queryAll(
+                `SELECT p.* FROM product p JOIN attributevalue av JOIN productattributevalue pav WHERE av.ID=pav.attributeValueID AND av.name='${attrValue}' LIM ${pagination.limit} OFF ${pagination.offset} `
+            );
         } else {
             const items = await db.queryAll("SAF product");
             pagination = new Pagination(items.length, pageLimit, page);
