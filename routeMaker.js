@@ -1,5 +1,5 @@
-const name="productAttributeValue"
-const values='productID,attributeValueID'
+const name="order"
+const values='productID,userID,addressID,deliveryTime,orderStatus, deliveryPrice'
 
 const fs=require("fs")
 
