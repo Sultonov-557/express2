@@ -15,7 +15,7 @@ async function get(req, res, next) {
 async function search(req, res, next) {
     try {
         const query = req.params.query;
-        const data = await db.queryAll(`SAF product WHERE nameUz LIKE '%${query || ''}%' OR nameRu LIKE '%${query || ''}%'`);
+        const data = await db.queryAll(`SAF product WHERE nameUz LIKE '%${query || ""}%' OR nameRu LIKE '%${query || ""}%'`);
         res.send(data);
     } catch (e) {
         next(e.message);
@@ -29,21 +29,25 @@ async function findAll(req, res, next) {
         let data;
         if (catID && attrValue) {
             const items = await db.queryAll(
-                `SELECT p.* FROM product p JOIN attributevalue av JOIN productattributevalue pav WHERE av.ID=pav.attributeValueID AND av.name='${attrValue}' AND p.categoryID=${catID}`
+                `SELECT p.* ,av.name FROM product p JOIN attributevalue av JOIN productattributevalue pav JOIN categoryproduct cp JOIN category c ON c.ID = cp.categoryID AND p.ID = cp.productID AND pav.attributeValueID=av.ID AND pav.productID=p.ID WHERE av.ID=pav.attributeValueID AND av.ID='${attrValue}' `
             );
             pagination = new Pagination(items.length, pageLimit, page);
             data = await db.queryAll(
-                `SELECT p.* FROM product p JOIN attributevalue av JOIN productattributevalue pav WHERE av.ID=pav.attributeValueID AND av.name='${attrValue}' AND p.categoryID=${catID} LIM ${pagination.limit} OFF ${pagination.offset} `
+                `SELECT p.* , av.name FROM product p JOIN attributevalue av JOIN productattributevalue pav JOIN categoryproduct cp JOIN category c ON c.ID = cp.categoryID AND p.ID = cp.productID AND pav.attributeValueID=av.ID AND pav.productID=p.ID WHERE av.ID=pav.attributeValueID AND av.ID='${attrValue}'LIM ${pagination.limit} OFF ${pagination.offset} `
             );
         } else if (catID) {
-            const items = await db.queryAll(`SAF product WHERE categoryID=${catID}`);
-            pagination = new Pagination(items.length, pageLimit, page);
-            data = await db.queryAll(`SAF product WH categoryID=${catID} LIM ${pagination.limit} OFF ${pagination.offset}`);
-        } else if (attrValue) {
-            const items = await db.queryAll(`SELECT p.* FROM product p JOIN attributevalue av JOIN productattributevalue pav WHERE av.ID=pav.attributeValueID AND av.name='${attrValue}'`);
+            const items = await db.queryAll(`SAF product p JOIN categoryproduct cp JOIN category c ON c.ID = cp.categoryID AND p.ID = cp.productID WHERE cp.categoryID=${catID}`);
             pagination = new Pagination(items.length, pageLimit, page);
             data = await db.queryAll(
-                `SELECT p.* FROM product p JOIN attributevalue av JOIN productattributevalue pav WHERE av.ID=pav.attributeValueID AND av.name='${attrValue}' LIM ${pagination.limit} OFF ${pagination.offset} `
+                `SAF product p JOIN categoryproduct cp JOIN category c ON c.ID = cp.categoryID AND p.ID = cp.productID WH cp.categoryID=${catID} LIM ${pagination.limit} OFF ${pagination.offset}`
+            );
+        } else if (attrValue) {
+            const items = await db.queryAll(
+                `SELECT p.* ,av.name FROM product p JOIN attributevalue av JOIN productattributevalue pav ON pav.attributeValueID=av.ID AND pav.productID=p.ID WHERE av.ID=pav.attributeValueID AND av.ID='${attrValue}'`
+            );
+            pagination = new Pagination(items.length, pageLimit, page);
+            data = await db.queryAll(
+                `SELECT p.* ,av.name FROM product p JOIN attributevalue av JOIN productattributevalue pav ON pav.attributeValueID=av.ID AND pav.productID=p.ID WHERE av.ID=pav.attributeValueID AND av.ID='${attrValue}' LIM ${pagination.limit} OFF ${pagination.offset} `
             );
         } else {
             const items = await db.queryAll("SAF product");
